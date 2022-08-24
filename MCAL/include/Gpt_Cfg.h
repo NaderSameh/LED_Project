@@ -1,0 +1,2 @@
+#define TIMER_1_ID 1
+#define TIMER_1_MAX_TICK 50000
