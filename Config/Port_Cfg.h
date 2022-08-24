@@ -103,6 +103,4 @@ typedef enum
     Port_PIN_NUM
 } Port_PinType;
 
-
-
 #endif /* PORT_CFG_H */

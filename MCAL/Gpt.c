@@ -1,6 +1,8 @@
 #include "Gpt.h"
 #include "Common_Macros.h"
 
+#include "tm4c123gh6pm.h" // Header file accesses registers in TMC123 microcontroller
+
 Gpt_NotifyType settedCallbackFunc;
 
 void Gpt_StartTimer(Gpt_ChannelType channel, Gpt_ValueType period_ticks)
@@ -66,23 +68,31 @@ void Gpt_Init(const Gpt_ConfigType *ConfigPtr)
     {
     case TIMER0_ID:
         baseRegAddr = TIMER0_BASE_ADDRESS;
+        NVIC_EnableIRQ(19);
         break;
     case TIMER1_ID:
         baseRegAddr = TIMER1_BASE_ADDRESS;
+        NVIC_EnableIRQ(21);
         break;
     case TIMER2_ID:
         baseRegAddr = TIMER2_BASE_ADDRESS;
+        NVIC_EnableIRQ(23);
         break;
     case TIMER3_ID:
         baseRegAddr = TIMER3_BASE_ADDRESS;
+        NVIC_EnableIRQ(35);
         break;
     case TIMER4_ID:
         baseRegAddr = TIMER4_BASE_ADDRESS;
+        NVIC_EnableIRQ(70);
         break;
     case TIMER5_ID:
         baseRegAddr = TIMER5_BASE_ADDRESS;
+        NVIC_EnableIRQ(92);
         break;
     };
+
+    SET_BIT(*(volatile uint32_t *)((volatile uint8_t *)TIMER_SYSCTL_BASE_REG + TIMER_RCGCTIMER_REG_OFFSET), ConfigPtr->gptChannelID); //turn on clock for timer X in system block
 
     CLEAR_BIT(*(volatile uint32_t *)((volatile uint8_t *)baseRegAddr + TIMER_CTL_REG_OFFSET), 0); //disable timer A
     CLEAR_BIT(*(volatile uint32_t *)((volatile uint8_t *)baseRegAddr + TIMER_CTL_REG_OFFSET), 8); //disable timer B
